@@ -1,0 +1,26 @@
+h1{
+    margin-top: 20px;
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: bold;
+    font-size: 3em;
+    color: black;
+}
+
+h2{
+    margin-top: 10px;
+    margin-left: 10px;
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: bold;
+    font-size: 1em;
+    color: black;  
+}
+
+input{
+    width: 100px
+}
+
+select{
+    width: 70px
+}

@@ -1,0 +1,17 @@
+<div style="margin-top: 50px" class="animated flipInX">
+    <form class="form-signin" [formGroup]="form" (submit)="onSubmit()">
+        <div class="text-center mb-4">
+          <h1 class="h3 mb-3 font-weight-normal">Cotações Madenorte</h1>    
+        </div>
+        <div class="form-label-group">
+          <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus formControlName="email">
+          <label for="inputEmail">Email</label>
+        </div>
+        <div class="form-label-group">
+          <input type="password" id="inputPassword" class="form-control" placeholder="Password" required formControlName="senha">
+          <label for="inputPassword">Senha</label>
+        </div>
+        <button type="submit" class="btn btn-lg btn-primary btn-block text-white" >Logar</button>
+        <p class="mt-5 mb-3 text-center text-white">&copy; {{ ano | date:'yyyy' }}</p>
+      </form>
+</div>

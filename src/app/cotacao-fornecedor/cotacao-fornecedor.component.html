@@ -1,0 +1,56 @@
+<div class="card" style="margin-top: 10px;">
+  <div class="card-title">
+    <h1>Lista de Produtos para Cotação</h1>
+    <h2>Seja bem vindo(a), {{ for_nome }}.</h2>
+  </div>  
+  <div class="card-body animated pulse" *ngIf="itens">
+    <table class="table table-dark table-responsive">
+      <thead>
+        <tr>
+          <td>Codigo</td>
+          <td>Nome</td>
+          <td>Marca</td>
+          <td>Quant. Pedida</td>
+          <td>Quant. Atendida</td>
+          <td>Valor Unit.</td>          
+          <td *ngIf="CRT > 1">CST</td>
+          <td *ngIf="CRT === 1">CSOSN</td>
+          <td>Valor Total</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of itens">
+          <td>{{ item.codigo }}</td>
+          <td>{{ item.nome }}</td>
+          <td><input class="form-control" type="text" [(ngModel)]="item.marca"></td>
+          <td>{{ item.quant_Pedida }}</td>
+          <td><input class="form-control" type="number" [(ngModel)]="item.quant_Atendida"></td>
+          <td><input class="form-control" type="text" [(ngModel)]="item.valorUnit" currencyMask ></td>
+          <td>
+            <div *ngIf="CRT > 1">
+              <select class="form-control" name="cst"  [formControl]="CST">
+                <option *ngFor="let cst of ListaCST" [ngValue]="cst">
+                  {{ cst }}
+                </option>
+              </select>
+            </div>
+            <div *ngIf="CRT === 1">
+                <select class="form-control" name="csosn"  [formControl]="CSOSN">
+                  <option *ngFor="let cst of ListaCSOSN" [ngValue]="csosn">
+                    {{ cst }}
+                  </option>
+                </select>
+              </div>
+          </td>
+          <td *ngIf="item.valor >= 0">{{ item.valorUnit*item.quant_Atendida | currency:'BRL' }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <!-- <div class="alert alert-info" role="alert">
+          <pre>{{ itens | json }}</pre>
+      </div>       -->
+    <div class="card-footer">
+      <button type="button" class="btn btn-secondary btn-lg btn-block" (click)="Finalizar()">Finalizar</button>
+    </div>
+  </div>
+</div>
