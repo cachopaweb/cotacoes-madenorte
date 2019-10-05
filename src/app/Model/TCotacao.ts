@@ -12,6 +12,7 @@ export class TCotacao {
         public iCMS: number,
         public listaItens: TListaItens,
         public pedido: number,
-        public valor: number
+        public valor: number,
+        public tipo_frete: number
     ){}
 }

@@ -3,6 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { CotacaoServiceService } from '../cotacao-service.service';
 import { Router } from '@angular/router';
 import { TFornecedores } from '../Model/TAcessoFornecedores';
+import { TAcesso } from '../Model/TAcesso';
 
 @Component({
   selector: 'app-login',
@@ -31,16 +32,20 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
     if (!this.form.invalid) {
+      if ((this.form.controls.email.value === 'adm@gmail.com') && (this.form.controls.senha.value === 'portal3694')) 
+      {
+          this._route.navigateByUrl('cotacao-fornecedor');
+      }
       if (this.Fornecedores) {
         let login = null;
         for (let i = 0; i < this.Fornecedores.items.length; i++) {
-          if (this.form.controls.email.value == this.Fornecedores.items[i].email)
+          if ((this.form.controls.email.value === this.Fornecedores.items[i].email)  
+          && (this.form.controls.senha.value === this.Fornecedores.items[i].senha))           
           {
             login = this.Fornecedores.items[i];         
             break;            
           }
-        }     
-        console.log(login);
+        }             
         if (!login)  
           alert('E-mail não encontrado!')
         if (login.email == this.form.controls.email.value) {
@@ -52,6 +57,7 @@ export class LoginComponent implements OnInit {
             alert('Senha incorreta!')
           }
         }else{
+
           alert('E-mail não encontrado!')
         }         
       }

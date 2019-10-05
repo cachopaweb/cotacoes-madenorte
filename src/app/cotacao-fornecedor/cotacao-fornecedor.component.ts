@@ -11,6 +11,8 @@ import { TFornecedores } from '../Model/TAcessoFornecedores';
 import { CSTServiceService } from '../cst-service.service';
 import { CSOSNServiceService } from '../csosn-service.service';
 import { FormControl } from '@angular/forms';
+import { TCst } from '../Model/TCst';
+import { TCsosn } from '../Model/TCsosn';
 
 @Component({
   selector: 'app-cotacao-fornecedor',
@@ -26,11 +28,15 @@ export class CotacaoFornecedorComponent implements OnInit {
   public cod_cotacao: string;
   public QuantCotacoes: number;
   public fornecedores: TFornecedores;
-  public ListaCST: string[] = [];
-  public ListaCSOSN: string[] = [];
+  public ListaCST: TCst[] = [];
+  public ListaCSOSN: TCsosn[] = [];
   public CST = new FormControl();
+  public CSOSN = new FormControl();
+  public data_entrega: string;
+  public valorFrete: number;
   public for_nome: string;
   public CRT: number;
+  public tipoFrete: number;
   
   constructor(private _ServiceCotacao: CotacaoServiceService, 
               private _route: Router,
@@ -38,11 +44,11 @@ export class CotacaoFornecedorComponent implements OnInit {
               private _ServiceCSOSN: CSOSNServiceService) { }
 
   ngOnInit() {
+    this.tipoFrete = 0;//CIF 
     this.Usuario = JSON.parse(localStorage.getItem('login'));  
     if (this.Usuario){
       this.for_nome = this.Usuario.nome;
       this.CRT = this.Usuario.crt;
-      console.log(this.Usuario)
     }
     if (this.Usuario.pedido > 0)
     {
@@ -52,6 +58,7 @@ export class CotacaoFornecedorComponent implements OnInit {
           {
             this.listaItens = sucess.listaItens;
             this.pedido = sucess;
+            this.pedido.codigo = 0;
             this.itens = sucess.listaItens.items;
             if (this.itens){
               this.itens.forEach(item=>{
@@ -71,13 +78,13 @@ export class CotacaoFornecedorComponent implements OnInit {
           {
             this.listaItens = sucess.listaItens;
             this.pedido = sucess;
-            this.itens = sucess.listaItens.items;
+            this.pedido.codigo = this.Usuario.cotacao;
+            this.itens = sucess.listaItens.items;  
             if (this.itens){
               this.itens.forEach(item=>{
-                item.quant_Atendida = item.quant_Pedida
-                item.valor = 0
+                item.valorUnit = item.valor / item.quant_Atendida                
               })
-            }
+            }         
           }
         }            
       );
@@ -96,7 +103,7 @@ export class CotacaoFornecedorComponent implements OnInit {
     //CST
     this.ListaCST = this._ServiceCST.getCST();    
     //CSOSN
-    this.ListaCSOSN = this._ServiceCSOSN.getCSOSN();
+    this.ListaCSOSN = this._ServiceCSOSN.getCSOSN();    
   }
 
   Finalizar(){
@@ -105,18 +112,26 @@ export class CotacaoFornecedorComponent implements OnInit {
         item.valor = item.quant_Atendida * item.valorUnit
       })
     }
-    if (!this.QuantCotacoes) this.QuantCotacoes = 1;
-    this.cotacao = new TCotacao(this.QuantCotacoes,
+      if (!this.QuantCotacoes) {
+        this.QuantCotacoes = 1;
+      }
+      if (this.pedido.codigo === 0){
+        this.pedido.codigo = this.QuantCotacoes;
+      }
+    this.pedido.data_Chegada = this.data_entrega.toString();
+    this.pedido.frete = this.valorFrete;
+    this.cotacao = new TCotacao(this.pedido.codigo,
                                 this.pedido.dARF, 
                                 this.pedido.data_Chegada, 
-                                this.pedido.data_Chegada, 
+                                this.pedido.data_Pronto_Venda, 
                                 this.pedido.estado, 
                                 this.Usuario.codigo, 
                                 this.pedido.frete, 
                                 this.pedido.iCMS, 
                                 this.listaItens, 
                                 this.pedido.pedido, 
-                                this.pedido.valor);
+                                this.pedido.valor,
+                                this.tipoFrete);
       Swal.fire(`Aguarde finalizando Cotação ${this.cotacao.codigo}...`, 'Cotações Madenorte', 'info')
       this._ServiceCotacao.InsereCotacao(this.cotacao.codigo.toString(), this.cotacao).subscribe(
       (cotacao)=>{
@@ -140,6 +155,10 @@ export class CotacaoFornecedorComponent implements OnInit {
     );
     
     //voltar para a pagina inicial
+  }
+
+  ChangeTipoFrete(tipo: number){
+    this.tipoFrete = tipo;    
   }
 
 }
