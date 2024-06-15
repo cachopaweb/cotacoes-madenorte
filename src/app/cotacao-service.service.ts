@@ -16,7 +16,7 @@ const httpOptions = {
 })
 export class CotacaoServiceService {
 
-  private BaseURL: string = "https://cotacoes-madenorte.firebaseio.com";
+  private BaseURL: string = "https://cotacoes-madenorte-2024-default-rtdb.firebaseio.com/";
   
   constructor(private _http: HttpClient) { }
 
